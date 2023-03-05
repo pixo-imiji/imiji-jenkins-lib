@@ -26,7 +26,7 @@ def call(body) {
             cron('H 22 * * *')
         }
         environment {
-            MODULE_VERSION = readJSON(file: 'package.json').version
+            MODULE_VERSION = sh(script: "grep \"version\" package.json | cut -d '\"' -f4 | tr -d '[[:space:]]'", returnStdout: true)
         }
         options {
 
