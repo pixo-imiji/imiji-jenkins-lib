@@ -11,14 +11,13 @@ import de.imiji.jenkins.constants.Stage
  */
 def call(body) {
 
-    Map pipelineParams = [:]
+    def pipelineParams = [:]
     body.resolveStrategy = Closure.DELEGATE_FIRST
     body.delegate = pipelineParams
+    body()
 
     CIBuild ciBuild = new CIBuild(this);
     CIPreconditions ciPreconditions = new CIPreconditions(this)
-
-    body()
 
     pipeline {
         agent any
