@@ -22,7 +22,7 @@ class CIBuild {
         this.pipeline.nvm("v" + NODE_VERSION) {
             this.pipeline.sh("npm install")
             this.pipeline.sh("npm run build")
-            this.pipeline.sh("node releaseSnapshot.js")
+            this.pipeline.sh("node deploy/releaseSnapshot.js")
             this.pipeline.sh("git push origin ${branch}")
         }
     }
