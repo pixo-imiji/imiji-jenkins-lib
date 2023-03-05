@@ -36,7 +36,7 @@ class CIBuild {
     }
 
     void deployOnStage(Stage stage, String moduleName, String version) {
-        this.pipeline.sh("deploy ${moduleName} with version ${version}")
+        this.pipeline.echo("deploy ${moduleName} with version ${version}")
 //        this.pipeline.sshagent(credentials: [SSH_CRED]) {
 //            ApplicationServerCommand applicationServerCommand = new ApplicationServerCommand(this.pipeline, stage)
 //            applicationServerCommand.stopServer()
@@ -52,7 +52,7 @@ class CIBuild {
 
     void emailBuildStatus(String result, String name, String url) {
         this.pipeline.emailext(
-                subject: "Imiji jenkins Build ${this.pipeline.currentBuild.result}: ${name}",
+                subject: "Imiji jenkins Build ${result}: ${name}",
                 body: "Siehe ${url}",
                 recipientProviders: [
                         [$class: 'DevelopersRecipientProvider'],
