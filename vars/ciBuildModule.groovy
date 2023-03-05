@@ -26,7 +26,7 @@ def call(body) {
             cron('H 22 * * *')
         }
         environment {
-            MODULE_VERSION = eadJSON(file: 'package.json').version
+            MODULE_VERSION = readJSON(file: 'package.json').version
         }
         options {
 
