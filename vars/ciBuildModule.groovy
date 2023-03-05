@@ -47,8 +47,10 @@ def call(body) {
                     echo sh(script: 'env|sort', returnStdout: true)
                     env.GIT_COMMITTER_EMAIL = sh(script: "git --no-pager show -s --format=" + "%ae", returnStdout: true).trim()
                     echo "env.GIT_COMMITTER_EMAIL: ${env.GIT_COMMITTER_EMAIL}"
-                    if (!env.GIT_COMMITTER_EMAIL.conatins("@")) {
-                        env.GIT_COMMITTER_EMAIL = ''
+                    script {
+                        if (!env.GIT_COMMITTER_EMAIL.conatins("@")) {
+                            env.GIT_COMMITTER_EMAIL = ''
+                        }
                     }
                 }
             }
@@ -87,7 +89,6 @@ def call(body) {
                 }
             }
             stage("Deploy DEV & run test") {
-                options { lock('imiji-dev') }
                 stages {
                     stage("Deploy DEV") {
                         when {
