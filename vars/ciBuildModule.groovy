@@ -57,7 +57,7 @@ def call(body) {
             stage("Build") {
                 steps {
                     script {
-                        ciBuild.buildModule(env.WORKSPACE, params.BRNACH)
+                        ciBuild.buildModule(env.WORKSPACE, params.BRANCH)
                     }
                 }
             }
@@ -74,7 +74,7 @@ def call(body) {
             stage("Sonarqube") {
                 when {
                     expression {
-                        params.BRNACH == "develop"
+                        params.BRANCH == "develop"
                     }
                 }
                 steps {
@@ -94,7 +94,7 @@ def call(body) {
                         when {
                             allOf {
                                 expression { pipelineParams.deployable }
-                                expression { params.BRNACH == "develop" }
+                                expression { params.BRANCH == "develop" }
                             }
                         }
                         steps {
@@ -107,7 +107,7 @@ def call(body) {
                         when {
                             allOf {
                                 expression { pipelineParams.deployable }
-                                expression { params.BRNACH == "develop" }
+                                expression { params.BRANCH == "develop" }
                             }
                         }
                         steps {
