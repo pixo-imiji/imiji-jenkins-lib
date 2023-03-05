@@ -41,17 +41,16 @@ def call(body) {
             }
             stage("Checkout Git") {
                 steps {
-                    sh "printenv"
-                    git branch: params.BRNACH, credentialsId: "github", url: pipelineParams.scmUrl
-
-                    echo sh(script: 'env|sort', returnStdout: true)
-                    env.GIT_COMMITTER_EMAIL = sh(script: "git --no-pager show -s --format=" + "%ae", returnStdout: true).trim()
-                    echo "env.GIT_COMMITTER_EMAIL: ${env.GIT_COMMITTER_EMAIL}"
                     script {
+                        sh "printenv"
+                        git branch: params.BRNACH, credentialsId: "github", url: pipelineParams.scmUrl
+
+                        echo sh(script: 'env|sort', returnStdout: true)
+                        env.GIT_COMMITTER_EMAIL = sh(script: "git --no-pager show -s --format=" + "%ae", returnStdout: true).trim()
+                        echo "env.GIT_COMMITTER_EMAIL: ${env.GIT_COMMITTER_EMAIL}"
+
                         if (!env.GIT_COMMITTER_EMAIL.conatins("@")) {
-                            steps {
-                                env.GIT_COMMITTER_EMAIL = ''
-                            }
+                            env.GIT_COMMITTER_EMAIL = ''
                         }
                     }
                 }
