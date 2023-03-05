@@ -22,7 +22,7 @@ class CIBuild {
         this.pipeline.nvm("v" + NODE_VERSION) {
             if (subDir != null && subDir != '') {
                 this.pipeline.sh("cd ${subDir}")
-                this.pipeline.sh("pwd")
+                this.pipeline.sh(script: "ls", returnStdout: true)
             }
             this.pipeline.sh("npm install")
             this.pipeline.sh("npm run build")
