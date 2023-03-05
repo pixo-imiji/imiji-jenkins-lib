@@ -27,7 +27,7 @@ class CIBuild {
     }
 
     void uploadNPMJs() {
-        this.pipeline.sh("upload to NPM")
+        this.pipeline.echo("upload to NPM")
 //        this.pipeline.withCredentials([string(credentialsId: NPM_CRED_ID, variable: 'NPM_TOKEN')]) {
         this.pipeline.nvm("v" + NODE_VERSION) {
             this.pipeline.sh("node -v")
