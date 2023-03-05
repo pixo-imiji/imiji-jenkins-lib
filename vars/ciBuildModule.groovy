@@ -49,7 +49,9 @@ def call(body) {
                     echo "env.GIT_COMMITTER_EMAIL: ${env.GIT_COMMITTER_EMAIL}"
                     script {
                         if (!env.GIT_COMMITTER_EMAIL.conatins("@")) {
-                            env.GIT_COMMITTER_EMAIL = ''
+                            steps {
+                                env.GIT_COMMITTER_EMAIL = ''
+                            }
                         }
                     }
                 }
