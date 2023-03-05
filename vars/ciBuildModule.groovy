@@ -39,24 +39,30 @@ def call(body) {
         }
         stages {
             stage("Check Preconditions") {
-                script {
-                    ciPreconditions.check()
+                steps {
+                    script {
+                        ciPreconditions.check()
+                    }
                 }
             }
             stage("Checkout Git") {
-                sh "printenv"
-                git branch: params.BRNACH, credentialsId: "github", url: pipelineParams.scmUrl
+                steps {
+                    sh "printenv"
+                    git branch: params.BRNACH, credentialsId: "github", url: pipelineParams.scmUrl
 
-                echo sh(script: 'env|sort', returnStdout: true)
-                env.GIT_COMMITTER_EMAIL = sh(script: "git --no-pager show -s --format=" + "%ae", returnStdout: true).trim()
-                echo "env.GIT_COMMITTER_EMAIL: ${env.GIT_COMMITTER_EMAIL}"
-                if (!env.GIT_COMMITTER_EMAIL.conatins("@")) {
-                    env.GIT_COMMITTER_EMAIL = ''
+                    echo sh(script: 'env|sort', returnStdout: true)
+                    env.GIT_COMMITTER_EMAIL = sh(script: "git --no-pager show -s --format=" + "%ae", returnStdout: true).trim()
+                    echo "env.GIT_COMMITTER_EMAIL: ${env.GIT_COMMITTER_EMAIL}"
+                    if (!env.GIT_COMMITTER_EMAIL.conatins("@")) {
+                        env.GIT_COMMITTER_EMAIL = ''
+                    }
                 }
             }
             stage("Build") {
-                script {
-                    ciBuild.buildModule(env.WORKSPACE, params.BRNACH)
+                steps {
+                    script {
+                        ciBuild.buildModule(env.WORKSPACE, params.BRNACH)
+                    }
                 }
             }
             stage("OWASP") {
@@ -80,8 +86,10 @@ def call(body) {
                 }
             }
             stage("Publish NPM") {
-                script {
-                    ciBuild.uploadNPMJs()
+                steps {
+                    script {
+                        ciBuild.uploadNPMJs()
+                    }
                 }
             }
             stage("Deploy DEV & run test") {
@@ -116,7 +124,9 @@ def call(body) {
                 }
             }
             stage("Run integration/ui/usecase test") {
-
+                steps {
+                    echo "run tests"
+                }
             }
         }
 
