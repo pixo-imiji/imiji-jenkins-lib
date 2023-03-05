@@ -25,7 +25,7 @@ def call(body) {
         triggers {
             cron('H 22 * * *')
         }
-        envirments {
+        environment {
             MODULE_VERSION = eadJSON(file: 'package.json').version
         }
         options {
