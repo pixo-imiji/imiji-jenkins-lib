@@ -39,7 +39,9 @@ def call(body) {
         }
         stages {
             stage("Check Preconditions") {
-                ciPreconditions.check()
+                script {
+                    ciPreconditions.check()
+                }
             }
             stage("Checkout Git") {
                 sh "printenv"
@@ -53,7 +55,9 @@ def call(body) {
                 }
             }
             stage("Build") {
-                ciBuild.buildModule(env.WORKSPACE, params.BRNACH)
+                script {
+                    ciBuild.buildModule(env.WORKSPACE, params.BRNACH)
+                }
             }
             stage("OWASP") {
                 steps {
@@ -76,7 +80,9 @@ def call(body) {
                 }
             }
             stage("Publish NPM") {
-                ciBuild.uploadNPMJs()
+                script {
+                    ciBuild.uploadNPMJs()
+                }
             }
             stage("Deploy DEV & run test") {
                 options { lock('imiji-dev') }
