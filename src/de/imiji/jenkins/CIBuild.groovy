@@ -20,7 +20,7 @@ class CIBuild {
     void buildModule(String subDir, String workspace, String branch) {
         this.pipeline.echo("build")
         this.pipeline.nvm("v" + NODE_VERSION) {
-            if (subDir) {
+            if (subDir != null || subDir != '') {
                 this.pipeline.sh("cd ${subDir}")
             }
             this.pipeline.sh("npm install")
