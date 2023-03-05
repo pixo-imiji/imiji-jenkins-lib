@@ -27,9 +27,6 @@ def call(body) {
         environment {
             MODULE_VERSION = sh(script: "grep \"version\" package.json | cut -d '\"' -f4 | tr -d '[[:space:]]'", returnStdout: true)
         }
-        tools {
-            git
-        }
         parameters {
             string(name: "BRANCH", defaultValue: "develop")
         }
