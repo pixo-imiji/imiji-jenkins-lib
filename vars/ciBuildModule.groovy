@@ -75,7 +75,7 @@ def call(body) {
             stage("Sonarqube") {
                 when {
                     expression {
-                        params.BRNACH === "develop"
+                        params.BRNACH == "develop"
                     }
                 }
                 steps {
