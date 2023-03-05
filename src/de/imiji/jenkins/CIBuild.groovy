@@ -7,14 +7,14 @@ import de.imiji.jenkins.util.SmockTest
 class CIBuild {
 
     private Object pipeline;
-    private SmockTest smockTest;
+    private SmockTest smock;
     public static NODE_VERSION = "18.0.0"
     public static NPM_CRED_ID = "NPM_PUBLISHER"
     public static SSH_CRED = ""
 
     CIBuild(Object pipeline) {
         this.pipeline = pipeline
-        this.smockTest = new SmockTest(pipeline)
+        this.smock = new SmockTest(pipeline)
     }
 
     void buildModule(String workspace, String branch) {
@@ -47,7 +47,7 @@ class CIBuild {
 
     void smockTest(Stage stage, String moduleName, String version) {
         this.pipeline.echo("smoke tests of ${moduleName} of ${version}")
-//        this.smockTest.runCI("", "", "", moduleName, version)
+//        this.smock.runCI("", "", "", moduleName, version)
     }
 
     void emailBuildStatus(String result, String name, String url) {

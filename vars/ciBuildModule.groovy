@@ -112,7 +112,7 @@ def call(body) {
                         }
                         steps {
                             script {
-                                ciBuild.smockTest.runCI(Stage.DEV, pipelineParams.moduleName, MODULE_VERSION)
+                                ciBuild.smockTest(Stage.DEV, pipelineParams.moduleName, MODULE_VERSION)
                             }
                         }
                     }
