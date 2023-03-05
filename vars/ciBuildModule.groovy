@@ -42,7 +42,7 @@ def call(body) {
                 steps {
                     script {
                         sh "printenv"
-                        git branch: params.BRNACH, credentialsId: "d42252c0-e2cb-495f-b98c-f60f23986c95", url: pipelineParams.scmUrl
+                        git branch: params.BRANCH, credentialsId: "d42252c0-e2cb-495f-b98c-f60f23986c95", url: pipelineParams.scmUrl
 
                         echo sh(script: 'env|sort', returnStdout: true)
                         env.GIT_COMMITTER_EMAIL = sh(script: "git --no-pager show -s --format=" + "%ae", returnStdout: true).trim()
