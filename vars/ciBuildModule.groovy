@@ -85,7 +85,7 @@ def call(body) {
             stage("Publish NPM") {
                 steps {
                     script {
-                        ciBuild.uploadNPMJs()
+                        ciBuild.uploadNPMJs(pipelineParams.subDir,)
                     }
                 }
             }
