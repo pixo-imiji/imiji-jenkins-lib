@@ -17,9 +17,12 @@ class CIBuild {
         this.smock = new SmockTest(pipeline)
     }
 
-    void buildModule(String workspace, String branch) {
+    void buildModule(String subDir, String workspace, String branch) {
         this.pipeline.echo("build")
         this.pipeline.nvm("v" + NODE_VERSION) {
+            if (subDir) {
+                this.pipeline.sh("cd ${subDir}")
+            }
             this.pipeline.sh("npm install")
             this.pipeline.sh("npm run build")
             this.pipeline.sh("node deploy/releaseSnapshot.js")

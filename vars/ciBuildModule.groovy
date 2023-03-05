@@ -7,6 +7,7 @@ import de.imiji.jenkins.constants.Stage
  * @param scmUrl
  * @param moduleName
  * @param deployable
+ * @param subDir
  * @return
  */
 def call(body) {
@@ -57,7 +58,7 @@ def call(body) {
             stage("Build") {
                 steps {
                     script {
-                        ciBuild.buildModule(env.WORKSPACE, params.BRANCH)
+                        ciBuild.buildModule(pipelineParams.subDir, env.WORKSPACE, params.BRANCH)
                     }
                 }
             }
