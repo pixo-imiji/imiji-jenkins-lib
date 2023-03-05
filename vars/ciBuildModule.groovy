@@ -11,7 +11,7 @@ import de.imiji.jenkins.constants.Stage
  */
 def call(body) {
 
-    def pipelineParams = [:]
+    Map pipelineParams = [:]
     body.resolveStrategy = Closure.DELEGATE_FIRST
     body.delegate = pipelineParams
 
@@ -21,7 +21,7 @@ def call(body) {
     body()
 
     pipeline {
-        agent any()
+        agent any
         triggers {
             cron('H 22 * * *')
         }
