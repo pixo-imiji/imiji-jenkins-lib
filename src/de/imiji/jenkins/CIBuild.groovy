@@ -21,12 +21,14 @@ class CIBuild {
         this.pipeline.echo("build")
         this.pipeline.nvm("v" + NODE_VERSION) {
             if (subDir != null && subDir != '') {
-                this.pipeline.sh("cd ${subDir}")
-                this.pipeline.sh("ls")
+                this.pipeline.sh("npm --prefix ${subDir} install")
+                this.pipeline.sh("npm --prefix ${subDir} run build")
+                this.pipeline.sh("node ${subDir}/deploy/releaseSnapshot.js")
+            } else {
+                this.pipeline.sh("npm install")
+                this.pipeline.sh("npm run build")
+                this.pipeline.sh("node deploy/releaseSnapshot.js")
             }
-            this.pipeline.sh("npm install")
-            this.pipeline.sh("npm run build")
-            this.pipeline.sh("node deploy/releaseSnapshot.js")
         }
     }
 
