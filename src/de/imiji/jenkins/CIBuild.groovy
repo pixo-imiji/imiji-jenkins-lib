@@ -30,7 +30,7 @@ class CIBuild {
         this.pipeline.echo("upload to NPM")
         this.pipeline.withCredentials([this.pipeline.string(credentialsId: NPM_CRED_ID, variable: 'NPM_TOKEN')]) {
             this.pipeline.nvm("v" + NODE_VERSION) {
-                this.sh("echo //npm.skunkhenry.com/:_authToken=${NPM_TOKEN} > .npmrc")
+                this.sh("echo //npm.skunkhenry.com/:_authToken=${this.pipeline.NPM_TOKEN} > .npmrc")
                 this.sh("npm whoami")
                 this.sh("rm .npmrc")
                 this.pipeline.sh("node -v")
