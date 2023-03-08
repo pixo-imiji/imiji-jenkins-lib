@@ -25,9 +25,8 @@ def call(body) {
         parameters {
             string(name: "BRANCH", defaultValue: "develop")
             choice(
-                    defaultValue: "${ReleaseLevel.major.name()}",
                     name: "releaseLevel",
-                    choices: "${ReleaseLevel.major.name()}\n${ReleaseLevel.minor.name()}\n${ReleaseLevel.patch.name()}",
+                    choices: "major\n minor\n patch",
                     description: "select next release incremented version of module"
             )
         }
