@@ -61,7 +61,7 @@ def call(body) {
             stage("Tag Version") {
                 steps {
                     script {
-                        releaseProduct.tag(params.BRANCH)
+                        releaseProduct.tag(params.BRANCH, env.MODULE_NAME)
                     }
                 }
             }

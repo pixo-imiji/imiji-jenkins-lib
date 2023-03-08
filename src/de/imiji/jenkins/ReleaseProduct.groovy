@@ -21,10 +21,14 @@ class ReleaseProduct {
         this.registry.release("npx semver ${version} -c -i ${level.name()}")
     }
 
-    void tag(String branch) {
+    void tag(String branch, String moduleName) {
         this.pipeline.sshagent(credentials: ["github"]) {
             this.pipeline.sh("git push --tags")
-            this.pipeline.sh("git push --set-upstream origin ${branch}")
+            this.pipeline.nvm("v" + ReleaseRegistry.NODE_VERSION) {
+                def version = this.pipeline.sh(script: "npm view ${moduleName}@latest version", returnStdout: true).trim()
+                this.pipeline.sh("npm version --no-git-tag-version ${version}-SNAPSHOT")
+                this.pipeline.sh("git push --set-upstream origin ${branch}")
+            }
         }
     }
 }
