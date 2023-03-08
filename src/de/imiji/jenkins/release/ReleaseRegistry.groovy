@@ -45,6 +45,7 @@ class ReleaseRegistry {
                 } catch (all) {
                     this.pipeline.echo("try to remove ${removeModule}")
                 }
+                this.pipeline.sleep(60)
                 this.pipeline.sh("npm publish --access public")
                 this.pipeline.sh("rm .npmrc")
             }
