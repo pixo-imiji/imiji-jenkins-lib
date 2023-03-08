@@ -17,7 +17,7 @@ class CIBuild {
         this.smock = new SmockTest(pipeline)
     }
 
-    void buildModule(String workspace, String branch) {
+    void buildModule() {
         this.pipeline.echo("build")
         this.pipeline.nvm("v" + NODE_VERSION) {
             this.pipeline.sh("npm install")
@@ -27,14 +27,18 @@ class CIBuild {
         }
     }
 
-    void uploadNPMJs() {
+    void uploadNPMJs(String moduleName, String version) {
         this.pipeline.echo("upload to NPM")
         this.pipeline.withCredentials([this.pipeline.string(credentialsId: NPM_CRED_ID, variable: 'NPM_TOKEN')]) {
             this.pipeline.nvm("v" + NODE_VERSION) {
                 this.pipeline.sh("echo //registry.npmjs.org/:_authToken=${this.pipeline.NPM_TOKEN} > .npmrc")
-                this.pipeline.sh("npm whoami")
+                try {
+                    this.pipeline.sh("npm unpublish ${moduleName}@${version} --force")
+                } catch (all) {
+                    this.pipeline.echo("can't unpublish ${moduleName} with version ${version}")
+                }
+                this.pipeline.sh("npm publish --access public")
                 this.pipeline.sh("rm .npmrc")
-                this.pipeline.sh("node -v")
             }
         }
     }

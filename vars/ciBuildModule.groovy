@@ -48,17 +48,13 @@ def call(body) {
                         echo sh(script: 'env|sort', returnStdout: true)
                         env.GIT_COMMITTER_EMAIL = sh(script: "git --no-pager show -s --format=" + "%ae", returnStdout: true).trim()
                         echo "env.GIT_COMMITTER_EMAIL: ${env.GIT_COMMITTER_EMAIL}"
-
-//                        if (!env.GIT_COMMITTER_EMAIL.conatins("@")) {
-//                            env.GIT_COMMITTER_EMAIL = ''
-//                        }
                     }
                 }
             }
             stage("Build") {
                 steps {
                     script {
-                        ciBuild.buildModule(env.WORKSPACE, params.BRANCH)
+                        ciBuild.buildModule()
                     }
                 }
             }
@@ -85,7 +81,7 @@ def call(body) {
             stage("Publish NPM") {
                 steps {
                     script {
-                        ciBuild.uploadNPMJs()
+                        ciBuild.uploadNPMJs(pipelineParams.moduleName, env.MODULE_VERSION)
                     }
                 }
             }
@@ -100,7 +96,7 @@ def call(body) {
                         }
                         steps {
                             script {
-                                ciBuild.deployOnStage(Stage.DEV, pipelineParams.moduleName, MODULE_VERSION)
+                                ciBuild.deployOnStage(Stage.DEV, pipelineParams.moduleName, env.MODULE_VERSION)
                             }
                         }
                     }
