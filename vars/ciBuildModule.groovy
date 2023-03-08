@@ -58,7 +58,7 @@ def call(body) {
             stage("Build") {
                 steps {
                     script {
-                        ciBuild.buildModule(pipelineParams.subDir, env.WORKSPACE, params.BRANCH)
+                        ciBuild.buildModule(env.WORKSPACE, params.BRANCH)
                     }
                 }
             }
@@ -85,7 +85,7 @@ def call(body) {
             stage("Publish NPM") {
                 steps {
                     script {
-                        ciBuild.uploadNPMJs(pipelineParams.subDir,)
+                        ciBuild.uploadNPMJs()
                     }
                 }
             }

@@ -9,7 +9,7 @@ class CIBuild {
     private Object pipeline;
     private SmockTest smock;
     public static NODE_VERSION = "18.0.0"
-    public static NPM_CRED_ID = "NPM_PUBLISHER"
+    public static NPM_CRED_ID = "npm"
     public static SSH_CRED = ""
 
     CIBuild(Object pipeline) {
@@ -17,13 +17,13 @@ class CIBuild {
         this.smock = new SmockTest(pipeline)
     }
 
-    void buildModule(String subDir, String workspace, String branch) {
+    void buildModule(String workspace, String branch) {
         this.pipeline.echo("build")
         this.pipeline.nvm("v" + NODE_VERSION) {
             if (subDir != null && subDir != '') {
-                this.pipeline.sh("npm --prefix ${subDir} install")
-                this.pipeline.sh("npm --prefix ${subDir} run build")
-                this.pipeline.sh("node ${subDir}/deploy/releaseSnapshot.js")
+                this.pipeline.sh("npm install")
+                this.pipeline.sh("npm run build")
+                this.pipeline.sh("node deploy/releaseSnapshot.js")
             } else {
                 this.pipeline.sh("npm install")
                 this.pipeline.sh("npm run build")
@@ -32,13 +32,16 @@ class CIBuild {
         }
     }
 
-    void uploadNPMJs(String subDir) {
+    void uploadNPMJs() {
         this.pipeline.echo("upload to NPM")
-//        this.pipeline.withCredentials([string(credentialsId: NPM_CRED_ID, variable: 'NPM_TOKEN')]) {
-        this.pipeline.nvm("v" + NODE_VERSION) {
-            this.pipeline.sh("node -v")
+        this.pipeline.withCredentials([string(credentialsId: NPM_CRED_ID, variable: 'NPM_TOKEN')]) {
+            this.pipeline.nvm("v" + NODE_VERSION) {
+                this.sh("echo //npm.skunkhenry.com/:_authToken=${env.NPM_TOKEN} > .npmrc")
+                this.sh("npm whoami")
+                this.sh("rm .npmrc")
+                this.pipeline.sh("node -v")
+            }
         }
-//        }
     }
 
     void deployOnStage(Stage stage, String moduleName, String version) {
