@@ -53,14 +53,14 @@ def call(body) {
             stage("Upload npm") {
                 steps {
                     script {
-                        releaseProduct.releaseNPMJs(env.MODULE_VERSION, pipelineParams.releaseLevel)
+                        releaseProduct.releaseNPMJs(env.MODULE_VERSION, params.releaseLevel)
                     }
                 }
             }
             stage("Tag Version") {
                 steps {
                     script {
-                        releaseProduct.tag()
+                        releaseProduct.tag(params.BRANCH)
                     }
                 }
             }
