@@ -41,12 +41,12 @@ class ReleaseRegistry {
                 this.pipeline.sh("echo //${REGISTER_URL}/:_authToken=${this.pipeline.NPM_TOKEN} > .npmrc")
                 def removeModule = "${moduleName}@${version}"
                 try {
-                    this.pipeline.sh("npm unpublish ${removeModule}")
+                    this.pipeline.sh("npm unpublish ${removeModule} --force")
                 } catch (all) {
                     this.pipeline.echo("try to remove ${removeModule}")
                 }
                 this.pipeline.sleep(60)
-                this.pipeline.sh("npm publish --access public")
+                this.pipeline.sh("npm publish --access public --force")
                 this.pipeline.sh("rm .npmrc")
             }
         }
