@@ -22,13 +22,14 @@ class ReleaseProduct {
     }
 
     void tag(String branch, String moduleName) {
-        this.pipeline.sshagent(["github"]) {
-            this.pipeline.sh('export GIT_SSH_COMMAND="ssh -oStrictHostKeyChecking=no"')
-            this.pipeline.sh("git push origin --tags")
-            this.pipeline.nvm("v" + ReleaseRegistry.NODE_VERSION) {
+        this.pipeline.nvm("v" + ReleaseRegistry.NODE_VERSION) {
+            this.pipeline.sshagent(credentials: ["github"]) {
+                this.pipeline.sh("git config http.sslVerify false")
+                this.pipeline.sh("git config user.name jenkins")
+                this.pipeline.sh("git push --tags")
+
                 def version = this.pipeline.sh(script: "npm view ${moduleName}@latest version", returnStdout: true).trim()
                 this.pipeline.sh("npm version --no-git-tag-version ${version}-SNAPSHOT")
-                this.pipeline.sh("git add .")
                 this.pipeline.sh("git push --set-upstream origin ${branch}")
             }
         }
