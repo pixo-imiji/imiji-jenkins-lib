@@ -24,7 +24,7 @@ class ReleaseProduct {
     void tag(String branch, String moduleName) {
         this.pipeline.sshagent(["github"]) {
             this.pipeline.sh('export GIT_SSH_COMMAND="ssh -oStrictHostKeyChecking=no"')
-            this.pipeline.sh("git push --tags")
+            this.pipeline.sh("git push origin --tags")
             this.pipeline.nvm("v" + ReleaseRegistry.NODE_VERSION) {
                 def version = this.pipeline.sh(script: "npm view ${moduleName}@latest version", returnStdout: true).trim()
                 this.pipeline.sh("npm version --no-git-tag-version ${version}-SNAPSHOT")
