@@ -39,13 +39,8 @@ class ReleaseRegistry {
         this.pipeline.withCredentials([this.pipeline.string(credentialsId: NPM_CRED_ID, variable: 'NPM_TOKEN')]) {
             this.pipeline.nvm("v" + NODE_VERSION) {
                 this.pipeline.sh("echo //${REGISTER_URL}/:_authToken=${this.pipeline.NPM_TOKEN} > .npmrc")
-                def removeModule = "${moduleName}@${version}"
-                try {
-                    this.pipeline.sh("npm unpublish ${removeModule} --force")
-                } catch (all) {
-                    this.pipeline.echo("try to remove ${removeModule}")
-                }
-                this.pipeline.sleep(60)
+                this.pipeline.sh("npm version --no-git-tag-version \$(npm view ${moduleName}@latest version)")
+                this.pipeline.sh("npm version --no-git-tag-version prerelease")
                 this.pipeline.sh("npm publish --access public --force")
                 this.pipeline.sh("rm .npmrc")
             }
