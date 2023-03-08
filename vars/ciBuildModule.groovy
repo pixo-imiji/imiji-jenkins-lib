@@ -80,7 +80,7 @@ def call(body) {
             stage("Publish NPM") {
                 steps {
                     script {
-                        ciBuild.uploadNPMJs(env.MODULE_NAME, env.MODULE_VERSION)
+                        ciBuild.uploadNPMJs(env.MODULE_NAME)
                     }
                 }
             }

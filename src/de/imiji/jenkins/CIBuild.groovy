@@ -25,8 +25,8 @@ class CIBuild {
         this.registry.build()
     }
 
-    void uploadNPMJs(String moduleName, String version) {
-        this.registry.upload(moduleName, version)
+    void uploadNPMJs(String moduleName) {
+        this.registry.upload(moduleName)
     }
 
     void deployOnStage(Stage stage, String moduleName, String version) {
