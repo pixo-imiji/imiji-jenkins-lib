@@ -21,14 +21,30 @@ class ReleaseRegistry {
         }
     }
 
-
-    void upload(String nextVersionCMD) {
+    void release(String nextVersionCMD) {
         this.pipeline.echo("upload to NPM")
         this.pipeline.withCredentials([this.pipeline.string(credentialsId: NPM_CRED_ID, variable: 'NPM_TOKEN')]) {
             this.pipeline.nvm("v" + NODE_VERSION) {
                 this.pipeline.sh("echo //${REGISTER_URL}/:_authToken=${this.pipeline.NPM_TOKEN} > .npmrc")
                 def nextVersion = this.pipeline.sh(nextVersionCMD)
                 this.pipeline.sh("npm version ${nextVersion}")
+                this.pipeline.sh("npm publish --access public")
+                this.pipeline.sh("rm .npmrc")
+            }
+        }
+    }
+
+    void upload(String moduleName, String version) {
+        this.pipeline.echo("upload to NPM")
+        this.pipeline.withCredentials([this.pipeline.string(credentialsId: NPM_CRED_ID, variable: 'NPM_TOKEN')]) {
+            this.pipeline.nvm("v" + NODE_VERSION) {
+                this.pipeline.sh("echo //${REGISTER_URL}/:_authToken=${this.pipeline.NPM_TOKEN} > .npmrc")
+                def removeModule = "${moduleName}@${version}"
+                try {
+                    this.pipeline.sh("npm unpublish ${removeModule}")
+                } catch (all) {
+                    this.pipeline.echo("try to remove ${removeModule}")
+                }
                 this.pipeline.sh("npm publish --access public")
                 this.pipeline.sh("rm .npmrc")
             }

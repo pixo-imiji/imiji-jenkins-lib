@@ -18,7 +18,7 @@ class ReleaseProduct {
     }
 
     void releaseNPMJs(String version, ReleaseLevel level) {
-        this.registry.upload("npx semver ${version} -c -i ${level.name()}")
+        this.registry.release("npx semver ${version} -c -i ${level.name()}")
     }
 
     void tag(String branch) {

@@ -25,8 +25,8 @@ class CIBuild {
         this.registry.build()
     }
 
-    void uploadNPMJs(String version) {
-        this.registry.upload("npx semver ${version} -i ${ReleaseLevel.prerelease.name()}")
+    void uploadNPMJs(String moduleName, String version) {
+        this.registry.upload(moduleName, version)
     }
 
     void deployOnStage(Stage stage, String moduleName, String version) {

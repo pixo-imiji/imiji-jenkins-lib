@@ -20,11 +20,12 @@ def call(body) {
         agent any
         environment {
             MODULE_VERSION = sh(script: "grep \"version\" package.json | cut -d '\"' -f4 | tr -d '[[:space:]]'", returnStdout: true)
+            MODULE_NAME = sh(script: "grep \"name\" package.json | cut -d '\"' -f4 | tr -d '[[:space:]]'", returnStdout: true)
         }
         parameters {
             string(name: "BRANCH", defaultValue: "develop")
             choice(
-                    defaultValue: "${ReleaseLevel.patch.name()}",
+                    defaultValue: "${ReleaseLevel.major.name()}",
                     name: "releaseLevel",
                     choices: "${ReleaseLevel.major.name()}\n${ReleaseLevel.minor.name()}\n${ReleaseLevel.patch.name()}",
                     description: "select next release incremented version of module"

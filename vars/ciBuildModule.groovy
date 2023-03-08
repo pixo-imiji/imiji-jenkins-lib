@@ -5,7 +5,6 @@ import de.imiji.jenkins.constants.Stage
 /**
  *
  * @param scmUrl
- * @param moduleName
  * @param deployable
  * @return
  */
@@ -26,6 +25,7 @@ def call(body) {
         }
         environment {
             MODULE_VERSION = sh(script: "grep \"version\" package.json | cut -d '\"' -f4 | tr -d '[[:space:]]'", returnStdout: true)
+            MODULE_NAME = sh(script: "grep \"name\" package.json | cut -d '\"' -f4 | tr -d '[[:space:]]'", returnStdout: true)
         }
         parameters {
             string(name: "BRANCH", defaultValue: "develop")
@@ -80,7 +80,7 @@ def call(body) {
             stage("Publish NPM") {
                 steps {
                     script {
-                        ciBuild.uploadNPMJs(env.MODULE_VERSION)
+                        ciBuild.uploadNPMJs(env.MODULE_VERSION, env.MODULE_NAME)
                     }
                 }
             }
@@ -95,7 +95,7 @@ def call(body) {
                         }
                         steps {
                             script {
-                                ciBuild.deployOnStage(Stage.DEV, pipelineParams.moduleName, env.MODULE_VERSION)
+                                ciBuild.deployOnStage(Stage.DEV, env.MODULE_NAME, env.MODULE_VERSION)
                             }
                         }
                     }
@@ -108,7 +108,7 @@ def call(body) {
                         }
                         steps {
                             script {
-                                ciBuild.smockTest(Stage.DEV, pipelineParams.moduleName, MODULE_VERSION)
+                                ciBuild.smockTest(Stage.DEV, env.MODULE_NAME, MODULE_VERSION)
                             }
                         }
                     }
