@@ -17,9 +17,8 @@ class ReleaseProduct {
         this.registry.build()
     }
 
-    void releaseNPMJs(String version, String strLevel) {
-        ReleaseLevel level = ReleaseLevel.valueOfName(strLevel)
-        this.registry.release("npx semver ${version} -c -i ${level.name()}")
+    void releaseNPMJs(String version, String level) {
+        this.registry.release("npx semver ${version} -c -i ${level}")
     }
 
     void tag(String branch, String moduleName) {
