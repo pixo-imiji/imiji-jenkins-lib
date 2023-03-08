@@ -36,6 +36,7 @@ class CIBuild {
                 } catch (all) {
                     this.pipeline.echo("can't unpublish ${moduleName} with version ${version}")
                 }
+                this.pipeline.sleep(60000)
                 this.pipeline.sh("npm publish --access public")
                 this.pipeline.sh("rm .npmrc")
             }
