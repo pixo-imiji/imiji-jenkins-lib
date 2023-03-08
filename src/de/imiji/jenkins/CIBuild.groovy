@@ -1,46 +1,32 @@
 package de.imiji.jenkins
 
+import de.imiji.jenkins.release.ReleaseRegistry
 import de.imiji.jenkins.constants.Stage
-import de.imiji.jenkins.release.ApplicationServerCommand
+import de.imiji.jenkins.release.ReleaseLevel
 import de.imiji.jenkins.util.SmockTest
 
 class CIBuild {
 
-    private Object pipeline;
-    private SmockTest smock;
     public static NODE_VERSION = "18.0.0"
     public static NPM_CRED_ID = "npm"
     public static SSH_CRED = ""
 
+    private Object pipeline
+    private SmockTest smock
+    private ReleaseRegistry registry
+
     CIBuild(Object pipeline) {
         this.pipeline = pipeline
         this.smock = new SmockTest(pipeline)
+        this.registry = new ReleaseRegistry(pipeline)
     }
 
     void buildModule() {
-        this.pipeline.echo("build")
-        this.pipeline.nvm("v" + NODE_VERSION) {
-            this.pipeline.sh("npm install")
-            this.pipeline.sh("npm run build")
-            this.pipeline.sh("git tag | xargs git tag -d")
-        }
+        this.registry.build()
     }
 
-    void uploadNPMJs(String moduleName, String version) {
-        this.pipeline.echo("upload to NPM")
-        this.pipeline.withCredentials([this.pipeline.string(credentialsId: NPM_CRED_ID, variable: 'NPM_TOKEN')]) {
-            this.pipeline.nvm("v" + NODE_VERSION) {
-                this.pipeline.sh("echo //registry.npmjs.org/:_authToken=${this.pipeline.NPM_TOKEN} > .npmrc")
-                try {
-                    this.pipeline.sh("npm unpublish ${moduleName}@${version} --force")
-                } catch (all) {
-                    this.pipeline.echo("can't unpublish ${moduleName} with version ${version}")
-                }
-                this.pipeline.sleep(60)
-                this.pipeline.sh("npm publish --access public")
-                this.pipeline.sh("rm .npmrc")
-            }
-        }
+    void uploadNPMJs(String version) {
+        this.registry.upload("npx semver ${version} -i ${ReleaseLevel.prerelease.name()}")
     }
 
     void deployOnStage(Stage stage, String moduleName, String version) {

@@ -7,7 +7,6 @@ import de.imiji.jenkins.constants.Stage
  * @param scmUrl
  * @param moduleName
  * @param deployable
- * @param subDir
  * @return
  */
 def call(body) {
@@ -17,7 +16,7 @@ def call(body) {
     body.delegate = pipelineParams
     body()
 
-    CIBuild ciBuild = new CIBuild(this);
+    CIBuild ciBuild = new CIBuild(this)
     CIPreconditions ciPreconditions = new CIPreconditions(this)
 
     pipeline {
