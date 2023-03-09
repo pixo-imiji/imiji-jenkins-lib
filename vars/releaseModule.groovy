@@ -1,5 +1,5 @@
+import groovy.json.JsonSlurper
 import de.imiji.jenkins.ReleaseProduct
-import de.imiji.jenkins.release.ReleaseLevel
 import de.imiji.jenkins.release.ReleaseRegistry
 
 /**
