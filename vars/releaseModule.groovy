@@ -53,8 +53,9 @@ def call(body) {
                 steps {
                     script {
                         def json = readJSON file: "package.json"
-                        echo "${json['dependencies']}"
-                        registry.checkReleaseSnapshots(json['dependencies'])
+                        def jsonSlurper = new JsonSlurper()
+                        def map = jsonSlurper.parseText(json['dependencies']) as Map
+                        registry.checkReleaseSnapshots(map)
                     }
                 }
             }
