@@ -25,6 +25,14 @@ class ReleaseRegistry {
         }
     }
 
+    void checkReleaseSnapshots(Map dependencies = [:]) {
+        def versions = dependencies.values();
+        if (versions.contains("SNAPSHOT")) {
+            this.pipeline.currentBuild.result = "ABORTED"
+            this.pipeline.error("contains snapshot versions")
+        }
+    }
+
     void release(String nextVersionCMD) {
         this.pipeline.echo("upload to NPM")
         this.cleanTags()

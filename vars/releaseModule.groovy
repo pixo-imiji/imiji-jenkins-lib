@@ -1,5 +1,6 @@
 import de.imiji.jenkins.ReleaseProduct
 import de.imiji.jenkins.release.ReleaseLevel
+import de.imiji.jenkins.release.ReleaseRegistry
 
 /**
  *
@@ -15,12 +16,14 @@ def call(body) {
     body()
 
     ReleaseProduct releaseProduct = new ReleaseProduct(this)
+    ReleaseRegistry registry = new ReleaseRegistry(this)
 
     pipeline {
         agent any
         environment {
             MODULE_VERSION = sh(script: "grep \"version\" package.json | cut -d '\"' -f4 | tr -d '[[:space:]]'", returnStdout: true)
             MODULE_NAME = sh(script: "grep \"name\" package.json | cut -d '\"' -f4 | tr -d '[[:space:]]'", returnStdout: true)
+            MODULE_DEPENDENCIES = sh(script: "grep \"dependencies\" package.json | cut -d '\"' -f4 | tr -d '[[:space:]]'", returnStdout: true)
         }
         options {
             timestamps()
@@ -44,6 +47,13 @@ def call(body) {
                         echo sh(script: 'env|sort', returnStdout: true)
                         env.GIT_COMMITTER_EMAIL = sh(script: "git --no-pager show -s --format=" + "%ae", returnStdout: true).trim()
                         echo "env.GIT_COMMITTER_EMAIL: ${env.GIT_COMMITTER_EMAIL}"
+                    }
+                }
+            }
+            stage("Check Snapshot") {
+                steps {
+                    script {
+                        registry.checkReleaseSnapshots(env.MODULE_DEPENDENCIES)
                     }
                 }
             }
