@@ -23,7 +23,6 @@ def call(body) {
         environment {
             MODULE_VERSION = sh(script: "grep \"version\" package.json | cut -d '\"' -f4 | tr -d '[[:space:]]'", returnStdout: true)
             MODULE_NAME = sh(script: "grep \"name\" package.json | cut -d '\"' -f4 | tr -d '[[:space:]]'", returnStdout: true)
-            MODULE_DEPENDENCIES = sh(script: "grep \"dependencies\" package.json | cut -d '\"' -f4 | tr -d '[[:space:]]'", returnStdout: true)
         }
         options {
             timestamps()
@@ -53,7 +52,8 @@ def call(body) {
             stage("Check Snapshot") {
                 steps {
                     script {
-                        registry.checkReleaseSnapshots(env.MODULE_DEPENDENCIES)
+                        def json = readJSON file: "package.json"
+                        registry.checkReleaseSnapshots(json['dependencies'])
                     }
                 }
             }
