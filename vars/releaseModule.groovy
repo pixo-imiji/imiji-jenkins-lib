@@ -54,7 +54,7 @@ def call(body) {
                     script {
                         def json = readJSON file: "package.json"
                         def jsonSlurper = new JsonSlurper()
-                        def map = jsonSlurper.parseText(json['dependencies']) as Map
+                        def map = jsonSlurper.parseText("${json.dependencies}") as Map
                         registry.checkReleaseSnapshots(map)
                     }
                 }
