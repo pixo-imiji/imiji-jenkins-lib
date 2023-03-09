@@ -29,8 +29,7 @@ class ReleaseProduct {
                 this.pipeline.sh("git push --tags")
 
                 def version = this.pipeline.sh(script: "npm view ${moduleName}@latest version", returnStdout: true).trim()
-                this.pipeline.sh("npm version --no-git-tag-version ${version}-SNAPSHOT")
-                this.pipeline.sh("git add .")
+                this.pipeline.sh("npm version ${version}-SNAPSHOT")
                 this.pipeline.sh("git push --set-upstream origin ${branch}")
             }
         }
