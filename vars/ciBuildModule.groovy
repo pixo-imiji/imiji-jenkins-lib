@@ -27,6 +27,11 @@ def call(body) {
             MODULE_VERSION = sh(script: "grep \"version\" package.json | cut -d '\"' -f4 | tr -d '[[:space:]]'", returnStdout: true)
             MODULE_NAME = sh(script: "grep \"name\" package.json | cut -d '\"' -f4 | tr -d '[[:space:]]'", returnStdout: true)
         }
+        options {
+            timestamps()
+            disableConcurrentBuilds()
+            buildDiscarder(logRotator(numToKeepStr: "5", arttifactNumToKeepStr: "5"))
+        }
         parameters {
             string(name: "BRANCH", defaultValue: "develop")
         }
