@@ -30,7 +30,7 @@ def call(body) {
         options {
             timestamps()
             disableConcurrentBuilds()
-            buildDiscarder(logRotator(numToKeepStr: "5", arttifactNumToKeepStr: "5"))
+            buildDiscarder(logRotator(numToKeepStr: "5", artifactNumToKeepStr: "5"))
         }
         parameters {
             string(name: "BRANCH", defaultValue: "develop")
