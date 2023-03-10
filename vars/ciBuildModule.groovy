@@ -121,7 +121,7 @@ def call(body) {
                 }
             }
             stage("Deploy DEV & run test") {
-                agent { label: "swarm-dev" }
+                agent { label "swarm-dev" }
                 stages {
                     stage("Deploy DEV") {
                         when {
