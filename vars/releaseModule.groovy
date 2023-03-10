@@ -56,6 +56,7 @@ def call(body) {
                         Map map = dependencies.collectEntries { SimpleImmutableEntry entry ->
                             return [entry.getKey(), entry.getValue()]
                         }
+                        echo map
                         registry.checkReleaseSnapshots(map)
                     }
                 }
