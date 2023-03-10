@@ -102,8 +102,12 @@ def call(body) {
                         }
                         steps {
                             script {
-                                withCredentials([file(credentialsId: 'jwt-priv-v1', variable: 'jwtKey')]) {
-                                    sh "docker secret create jwt.key ${jwtKey}"
+                                try {
+                                    withCredentials([file(credentialsId: 'jwt-priv-v1', variable: 'jwtKey')]) {
+                                        sh "docker secret create jwt.key ${jwtKey}"
+                                    }
+                                } catch (all) {
+                                    echo "already created"
                                 }
                                 ciBuild.buildDocker(env.MODULE_NAME)
                             }
