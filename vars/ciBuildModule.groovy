@@ -26,6 +26,7 @@ def call(body) {
         environment {
             MODULE_VERSION = sh(script: "grep \"version\" package.json | cut -d '\"' -f4 | tr -d '[[:space:]]'", returnStdout: true)
             MODULE_NAME = sh(script: "grep \"name\" package.json | cut -d '\"' -f4 | tr -d '[[:space:]]'", returnStdout: true)
+            DOCKERHUB_CREDENTIALS = credentials("docker-hub")
         }
         options {
             timestamps()
@@ -89,13 +90,34 @@ def call(body) {
                     }
                 }
             }
+            stage("Docker") {
+                stages {
+                    stage("Docker build") {
+                        when {
+                            allOf {
+                                expression { pipelineParams.deployable }
+                            }
+                        }
+                        ciBuild.buildDocker(env.MODULE_NAME)
+                    }
+                    stage("Docker hub publish") {
+                        when {
+                            allOf {
+                                expression { pipelineParams.deployable }
+                            }
+                        }
+                        ciBuild.loginDocker()
+                        ciBuild.uploadDocker(env.MODULE_NAME)
+                    }
+                }
+            }
             stage("Deploy DEV & run test") {
+                agent { label: "swarm-dev" }
                 stages {
                     stage("Deploy DEV") {
                         when {
                             allOf {
                                 expression { pipelineParams.deployable }
-                                expression { params.BRANCH == "develop" }
                             }
                         }
                         steps {
@@ -108,7 +130,6 @@ def call(body) {
                         when {
                             allOf {
                                 expression { pipelineParams.deployable }
-                                expression { params.BRANCH == "develop" }
                             }
                         }
                         steps {
@@ -141,6 +162,9 @@ def call(body) {
                 script {
                     ciBuild.emailBuildStatus(currentBuild.result, currentBuild.fullDisplayName, currentBuild.absoluteUrl)
                 }
+            }
+            always {
+                sh "docker logout"
             }
         }
     }

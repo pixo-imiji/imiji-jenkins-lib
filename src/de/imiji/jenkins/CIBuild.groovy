@@ -29,6 +29,20 @@ class CIBuild {
         this.registry.upload(moduleName)
     }
 
+    void buildDocker(String moduleName) {
+        String tag = "${moduleName}:latest"
+        this.pipeline.sh("docker build . -t ${tag} -f docker/DockerfileDev")
+    }
+
+    void loginDocker() {
+        this.pipeline.sh('echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin')
+    }
+
+    void uploadDocker(String moduleName) {
+        String tag = "${moduleName}:latest"
+        this.pipeline.sh("docker push ${tag}")
+    }
+
     void deployOnStage(Stage stage, String moduleName, String version) {
         this.pipeline.echo("deploy ${moduleName} with version ${version}")
 //        this.pipeline.sshagent(credentials: [SSH_CRED]) {
