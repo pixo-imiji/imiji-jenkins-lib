@@ -54,6 +54,7 @@ def call(body) {
                     script {
                         def dependencies = readJSON(file: "package.json").dependencies
                         Map map = dependencies.collectEntries { String entry ->
+                            echo(entry)
                             def arr = entry.split(":")
                             return [arr[0].trim(), arr[1].trim()]
                         }
