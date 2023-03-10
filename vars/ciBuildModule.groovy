@@ -103,7 +103,7 @@ def call(body) {
                         steps {
                             script {
                                 withCredentials([file(credentialsId: 'jwt-priv-v1', variable: 'jwtKey')]) {
-                                    sh "cp ${jwtKey} ${env.WORKSPACE}/jwt.key"
+                                    sh "docker secret create jwt.key ${jwtKey}"
                                 }
                                 ciBuild.buildDocker(env.MODULE_NAME)
                             }
