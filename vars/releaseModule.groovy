@@ -1,4 +1,4 @@
-import groovy.json.JsonSlurper
+import java.util.AbstractMap.SimpleImmutableEntry
 import de.imiji.jenkins.ReleaseProduct
 import de.imiji.jenkins.release.ReleaseRegistry
 
