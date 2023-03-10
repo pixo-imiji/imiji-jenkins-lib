@@ -98,7 +98,12 @@ def call(body) {
                                 expression { pipelineParams.deployable }
                             }
                         }
-                        ciBuild.buildDocker(env.MODULE_NAME)
+                        steps {
+                            script {
+                                ciBuild.buildDocker(env.MODULE_NAME)
+                            }
+                        }
+
                     }
                     stage("Docker hub publish") {
                         when {
@@ -106,8 +111,12 @@ def call(body) {
                                 expression { pipelineParams.deployable }
                             }
                         }
-                        ciBuild.loginDocker()
-                        ciBuild.uploadDocker(env.MODULE_NAME)
+                        steps {
+                            script {
+                                ciBuild.loginDocker()
+                                ciBuild.uploadDocker(env.MODULE_NAME)
+                            }
+                        }
                     }
                 }
             }
