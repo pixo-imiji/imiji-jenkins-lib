@@ -26,10 +26,12 @@ class ReleaseRegistry {
     }
 
     void checkReleaseSnapshots(Map dependencies = [:]) {
-        def versions = dependencies.values();
-        if (versions.contains("SNAPSHOT")) {
-            this.pipeline.currentBuild.result = "ABORTED"
-            this.pipeline.error("contains snapshot versions")
+        def versions = dependencies.values()
+        for (String version in versions) {
+            if (version.contains("SNAPSHOT")) {
+                this.pipeline.currentBuild.result = "ABORTED"
+                this.pipeline.error("contains snapshot versions")
+            }
         }
     }
 
