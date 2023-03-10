@@ -91,6 +91,7 @@ def call(body) {
                 }
             }
             stage("Docker") {
+                agent { label "swarm-dev" }
                 stages {
                     stage("Docker build") {
                         when {
