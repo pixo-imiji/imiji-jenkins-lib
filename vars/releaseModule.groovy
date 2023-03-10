@@ -52,9 +52,11 @@ def call(body) {
             stage("Check Snapshot") {
                 steps {
                     script {
-                        def json = readJSON file: "package.json"
-                        def jsonSlurper = new JsonSlurper()
-                        def map = jsonSlurper.parseText("${json.dependencies}") as Map
+                        def dependencies = readJSON(file: "package.json").dependencies
+                        Map map = dependencies.collectEntries { String entry ->
+                            def arr = entry.split(":")
+                            return [arr[0].trim(), arr[1].trim()]
+                        }
                         registry.checkReleaseSnapshots(map)
                     }
                 }
