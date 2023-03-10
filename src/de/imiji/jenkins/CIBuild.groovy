@@ -30,7 +30,7 @@ class CIBuild {
     }
 
     private String buildTag(String moduleName) {
-        return "${this.pipeline.env.DOCKERHUB_CREDENTIALS_USR}${moduleName}:latest"
+        return "${this.pipeline.env.DOCKERHUB_CREDENTIALS_USR}/${moduleName}:latest"
     }
 
     void buildDocker(String moduleName) {
