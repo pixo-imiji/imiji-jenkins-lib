@@ -102,8 +102,8 @@ def call(body) {
                         }
                         steps {
                             script {
-                                withCredentials([file(credentialsId: 'jwt-priv-v1', variable: 'jwt-key')]) {
-                                    sh "cp \$jwt-key ${env.WORKSPACE}/jwt.key"
+                                withCredentials([file(credentialsId: 'jwt-priv-v1', variable: 'jwtKey')]) {
+                                    sh "cp ${jwtKey} ${env.WORKSPACE}/jwt.key"
                                 }
                                 ciBuild.buildDocker(env.MODULE_NAME)
                             }
@@ -177,7 +177,12 @@ def call(body) {
                 }
             }
             always {
-                sh "docker logout"
+                script {
+                    sh "docker logout"
+                    if (pipelineParams.deployable) {
+                        deleteDir()
+                    }
+                }
             }
         }
     }
