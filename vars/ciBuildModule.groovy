@@ -21,7 +21,7 @@ def call(body) {
     pipeline {
         agent any
         triggers {
-            cron('H 22 * * *')
+            pollSCM('* * * * *')
         }
         environment {
             MODULE_VERSION = sh(script: "grep \"version\" package.json | cut -d '\"' -f4 | tr -d '[[:space:]]'", returnStdout: true)
