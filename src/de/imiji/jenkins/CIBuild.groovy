@@ -29,9 +29,12 @@ class CIBuild {
         this.registry.upload(moduleName)
     }
 
+    private String buildTag(String moduleName) {
+        return "${this.pipeline.env.DOCKERHUB_CREDENTIALS_USR}${moduleName}:latest"
+    }
+
     void buildDocker(String moduleName) {
-        String tag = "${moduleName}:latest"
-        this.pipeline.sh("docker build . -t ${tag} -f docker/DockerfileDev")
+        this.pipeline.sh("docker build . -t ${this.buildTag(moduleName)} -f docker/DockerfileDev")
     }
 
     void loginDocker() {
@@ -39,8 +42,7 @@ class CIBuild {
     }
 
     void uploadDocker(String moduleName) {
-        String tag = "${moduleName}:latest"
-        this.pipeline.sh("docker push ${tag}")
+        this.pipeline.sh("docker push ${this.buildTag(moduleName)}")
     }
 
     void deployOnStage(Stage stage, String moduleName, String version) {
