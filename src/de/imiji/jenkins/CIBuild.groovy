@@ -46,7 +46,8 @@ class CIBuild {
     }
 
     void deployOnStage(Stage stage, String moduleName, String version) {
-        this.pipeline.echo("deploy ${moduleName} with version ${version}")
+        this.pipeline.build(job: 'deployment-' + stage.name())
+        this.pipeline.echo("deployed ${moduleName} with version ${version}")
 //        this.pipeline.sshagent(credentials: [SSH_CRED]) {
 //            ApplicationServerCommand applicationServerCommand = new ApplicationServerCommand(this.pipeline, stage)
 //            applicationServerCommand.stopServer()
