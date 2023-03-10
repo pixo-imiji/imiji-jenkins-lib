@@ -18,8 +18,10 @@ def call(body) {
     CIBuild ciBuild = new CIBuild(this)
     CIPreconditions ciPreconditions = new CIPreconditions(this)
 
+    String agentName = pipelineParams.deployable ? "swarm-dev" : ""
+
     pipeline {
-        agent any
+        agent { label agentName }
         triggers {
             pollSCM('* * * * *')
         }
@@ -91,7 +93,6 @@ def call(body) {
                 }
             }
             stage("Docker") {
-                agent { label "swarm-dev" }
                 stages {
                     stage("Docker build") {
                         when {
@@ -101,6 +102,9 @@ def call(body) {
                         }
                         steps {
                             script {
+                                withCredentials([file(credentialsId: 'jwt-priv-v1', variable: 'jwt-key')]) {
+                                    sh "cp \$jwt-key ${env.WORKSPACE}/jwt.key"
+                                }
                                 ciBuild.buildDocker(env.MODULE_NAME)
                             }
                         }
@@ -122,7 +126,6 @@ def call(body) {
                 }
             }
             stage("Deploy DEV & run test") {
-                agent { label "swarm-dev" }
                 stages {
                     stage("Deploy DEV") {
                         when {
