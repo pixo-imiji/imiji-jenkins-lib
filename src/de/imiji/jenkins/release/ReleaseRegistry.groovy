@@ -19,6 +19,7 @@ class ReleaseRegistry {
     void build() {
         this.pipeline.echo("build")
         this.pipeline.nvm("v" + NODE_VERSION) {
+            this.pipeline.sh("rm -rf node_modules")
             this.pipeline.sh("npm install")
             this.pipeline.sh("npm run build")
             this.cleanTags()
