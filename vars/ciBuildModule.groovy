@@ -37,8 +37,8 @@ def call(body) {
         }
         parameters {
             string(name: "BRANCH", defaultValue: "develop")
-            string(name: "jwt-priv-v1", defaultValue: "secretJwtKey")
-            string(name: "jwt-pub-v1", defaultValue: "secretJwtPub")
+            string(name: "secretJwtKey", defaultValue: "jwt-priv-v1")
+            string(name: "secretJwtPub", defaultValue: "jwt-pub-v1")
         }
         stages {
             stage("Check Preconditions") {
