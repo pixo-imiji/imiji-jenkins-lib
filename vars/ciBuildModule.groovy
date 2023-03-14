@@ -18,7 +18,7 @@ def call(body) {
     CIBuild ciBuild = new CIBuild(this)
     CIPreconditions ciPreconditions = new CIPreconditions(this)
 
-    String agentName = pipelineParams.deployable ? "swarm-dev" : ""
+    String agentName = pipelineParams.deployable ? "ci-builder" : ""
 
     pipeline {
         agent { label agentName }
