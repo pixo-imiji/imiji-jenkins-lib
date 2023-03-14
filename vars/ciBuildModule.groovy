@@ -88,6 +88,11 @@ def call(body) {
                 }
             }
             stage("Publish NPM") {
+                when {
+                    not {
+                        expression { pipelineParams.deployable }
+                    }
+                }
                 steps {
                     script {
                         ciBuild.uploadNPMJs(env.MODULE_NAME)
