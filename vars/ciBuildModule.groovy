@@ -26,6 +26,7 @@ def call(body) {
             pollSCM('* * * * *')
         }
         environment {
+            NPM_CONFIG_CACHE = "${WORKSPACE}/.npm"
             MODULE_VERSION = sh(script: "grep \"version\" package.json | cut -d '\"' -f4 | tr -d '[[:space:]]'", returnStdout: true)
             MODULE_NAME = sh(script: "grep \"name\" package.json | cut -d '\"' -f4 | tr -d '[[:space:]]'", returnStdout: true)
             DOCKERHUB_CREDENTIALS = credentials("docker-hub")
