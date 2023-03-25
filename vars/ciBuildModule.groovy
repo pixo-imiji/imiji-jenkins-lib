@@ -18,7 +18,7 @@ def call(body) {
     CIBuild ciBuild = new CIBuild(this)
     CIPreconditions ciPreconditions = new CIPreconditions(this)
 
-    String agentName = "ci-builder"
+    String agentName = pipelineParams.deployable ?  "swarm-dev" : "ci-builder"
 
     pipeline {
         agent { label agentName }
@@ -99,38 +99,6 @@ def call(body) {
                     }
                 }
             }
-            stage("Create Secrets") {
-                agent { label "swarm-dev" }
-                stages {
-                    stage("private") {
-                        steps {
-                            script {
-                                try {
-                                    withCredentials([file(credentialsId: params.secretJwtKey, variable: 'jwtKey')]) {
-                                        sh "docker secret create jwt.key ${jwtKey}"
-                                    }
-                                } catch (all) {
-                                    echo "already created"
-                                }
-                            }
-                        }
-                    }
-                    stage("Public") {
-                        steps {
-                            script {
-                                try {
-                                    withCredentials([file(credentialsId: params.secretJwtPub, variable: 'jwtPub')]) {
-                                        sh "docker secret create jwt.pub ${jwtPub}"
-                                    }
-                                } catch (all) {
-                                    echo "already created"
-                                }
-                            }
-                        }
-
-                    }
-                }
-            }
             stage("Docker") {
                 stages {
                     stage("Docker build") {
@@ -141,6 +109,20 @@ def call(body) {
                         }
                         steps {
                             script {
+                                try {
+                                    withCredentials([file(credentialsId: params.secretJwtKey, variable: 'jwtKey')]) {
+                                        sh "docker secret create jwt.key ${jwtKey}"
+                                    }
+                                } catch (all) {
+                                    echo "already created"
+                                }
+                                try {
+                                    withCredentials([file(credentialsId: params.secretJwtPub, variable: 'jwtPub')]) {
+                                        sh "docker secret create jwt.pub ${jwtPub}"
+                                    }
+                                } catch (all) {
+                                    echo "already created"
+                                }
                                 ciBuild.buildDocker(env.MODULE_NAME)
                             }
                         }
