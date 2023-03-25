@@ -103,21 +103,25 @@ def call(body) {
                 agent { label "swarm-dev" }
                 stages {
                     stage("private") {
-                        try {
-                            withCredentials([file(credentialsId: params.secretJwtKey, variable: 'jwtKey')]) {
-                                sh "docker secret create jwt.key ${jwtKey}"
+                        steps {
+                            try {
+                                withCredentials([file(credentialsId: params.secretJwtKey, variable: 'jwtKey')]) {
+                                    sh "docker secret create jwt.key ${jwtKey}"
+                                }
+                            } catch (all) {
+                                echo "already created"
                             }
-                        } catch (all) {
-                            echo "already created"
                         }
                     }
                     stage("Public") {
-                        try {
-                            withCredentials([file(credentialsId: params.secretJwtPub, variable: 'jwtPub')]) {
-                                sh "docker secret create jwt.pub ${jwtPub}"
+                        steps {
+                            try {
+                                withCredentials([file(credentialsId: params.secretJwtPub, variable: 'jwtPub')]) {
+                                    sh "docker secret create jwt.pub ${jwtPub}"
+                                }
+                            } catch (all) {
+                                echo "already created"
                             }
-                        } catch (all) {
-                            echo "already created"
                         }
                     }
                 }
