@@ -54,6 +54,7 @@ class ReleaseRegistry {
         this.pipeline.echo("upload to NPM")
         this.pipeline.withCredentials([this.pipeline.string(credentialsId: NPM_CRED_ID, variable: 'NPM_TOKEN')]) {
             this.pipeline.nvm("v" + NODE_VERSION) {
+                this.pipeline.sh("npm cache clean --force")
                 this.pipeline.sh("echo //${REGISTER_URL}/:_authToken=${this.pipeline.NPM_TOKEN} > .npmrc")
                 String version = "1.0.0-SNAPSHOT"
                 try {
