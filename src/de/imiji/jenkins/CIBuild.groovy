@@ -43,6 +43,7 @@ class CIBuild {
 
     void uploadDocker(String moduleName) {
         this.pipeline.sh("docker push ${this.buildTag(moduleName)}")
+        this.pipeline.sh("docker system prune -af")
     }
 
     void deployOnStage(Stage stage, String moduleName, String version) {
